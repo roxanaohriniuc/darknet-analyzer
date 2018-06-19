@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "darknet-analyzer.cli", "darknet-analyzer.cli\darknet-analyzer.cli.csproj", "{8283249E-BF61-4F48-95D0-A653964D491E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "darknet-analyzer", "darknet-analyzer\darknet-analyzer.csproj", "{D5DD2AC9-E42A-4096-8979-91F4F355917E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8283249E-BF61-4F48-95D0-A653964D491E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8283249E-BF61-4F48-95D0-A653964D491E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8283249E-BF61-4F48-95D0-A653964D491E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8283249E-BF61-4F48-95D0-A653964D491E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5DD2AC9-E42A-4096-8979-91F4F355917E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5DD2AC9-E42A-4096-8979-91F4F355917E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5DD2AC9-E42A-4096-8979-91F4F355917E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5DD2AC9-E42A-4096-8979-91F4F355917E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
