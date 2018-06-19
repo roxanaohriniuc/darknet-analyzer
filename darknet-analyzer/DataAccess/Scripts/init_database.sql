@@ -47,7 +47,7 @@ IF OBJECT_ID('dbo.ProbeInformation', 'U') IS NOT NULL
 
 CREATE TABLE dbo.ProbeInformation 
 (
-	SourceIp VARCHAR(255),
+	SourceIp VARCHAR(255) PRIMARY KEY,
 	NumTargetIps INT,
 	NumTargetPorts INT,
     TotalBytes INT,
@@ -85,7 +85,9 @@ BEGIN
 
     ;WITH ProbePage AS (
 		SELECT DISTINCT PageSourceIp = SourceIp
-		FROM dbo.PacketSummary
+		FROM dbo.PacketSummary s
+		INNER JOIN dbo.PcapFile f ON s.FileId = f.Id
+		WHERE f.Analyzed <> 1
 		ORDER BY SourceIp
 		OFFSET (@BatchNum * @BatchSize) ROWS 
 		FETCH NEXT @BatchSize ROWS ONLY

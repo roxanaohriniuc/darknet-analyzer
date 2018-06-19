@@ -30,7 +30,7 @@ namespace darknet_analyzer.Services
                 var probes = this.packetSummaryService.GetProbeInformationBatch(batchNum, batchSize);
                 if(probes.Any())
                 {
-                    this.probeInformationRepository.Insert(probes);
+                    this.probeInformationRepository.CreateOrUpdate(probes);
                 }
 
                 totalProbes += probes.Count;

@@ -6,7 +6,7 @@ namespace darknet_analyzer.DataAccess
     {
         public PcapFileRepository(string connectionString) : base (connectionString) { }
 
-        public InsertPcapFileResult Insert(string filePath)
+        public InsertPcapFileResult Create(string filePath)
         {
             var sql = "INSERT INTO PcapFile (FilePath) OUTPUT INSERTED.Id VALUES (@FilePath)";
 
@@ -22,6 +22,11 @@ namespace darknet_analyzer.DataAccess
             }
 
             return result;
+        }
+
+        public void MarkFilesAsAnalyzed()
+        {
+            this.NonQuery("UPDATE PcapFile SET Analyzed = 1 WHERE Analyzed = 0");
         }
 
         public class InsertPcapFileResult

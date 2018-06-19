@@ -34,14 +34,14 @@ namespace darknet_analyzer.Services
                 this.ProcessFile(path);
             }
 
-            // TODO: only analyze files that are not analyzed yet
-            //var toAnalyze = this.pcapFileRepository.GetNotAnalyzedIds();
+            Console.WriteLine("Analyzing new source ip addresses.");
             this.probeInformationService.AnalyzeProbeInformation();
+            this.pcapFileRepository.MarkFilesAsAnalyzed();
         }
 
         private void ProcessFile(string filePath)
         {
-            var insertResult = this.pcapFileRepository.Insert(filePath);
+            var insertResult = this.pcapFileRepository.Create(filePath);
             if (insertResult.AlreadyExists)
             {
                 Console.WriteLine($"File already processed: {filePath}{Environment.NewLine}");
@@ -54,7 +54,7 @@ namespace darknet_analyzer.Services
                 FilePath = filePath
             };
 
-            Console.WriteLine($"Parsing file: {filePath}");
+            Console.WriteLine($"Loading file: {filePath}");
             this.packetSummaryService.AnalyzePcapFile(file);
         }
     }

@@ -10,12 +10,22 @@ namespace darknet_analyzer.DataAccess
     {
         public ProbeInformationRepository(string connectionString) : base (connectionString) { }
 
-        public void Insert(IEnumerable<ProbeInformation> probes)
+        public void CreateOrUpdate(IEnumerable<ProbeInformation> probes)
         {
             var insertSql =
+                // Update existing records
+                "UPDATE e SET " +
+                "e.NumTargetIps = u.NumTargetIps, e.NumTargetPorts = u.NumTargetPorts, " +
+                "e.TotalBytes = u.TotalBytes, e.Totalpackets = u.TotalPackets, " +
+                "e.StartDateTime = u.StartDateTime, e.EndDateTime = u.EndDateTime " +
+                "FROM @InsertTable u " +
+                "INNER JOIN dbo.ProbeInformation e ON u.SourceIp = e.SourceIp; " +
+                // Insert new records
                 "INSERT INTO dbo.ProbeInformation (SourceIp, NumTargetIps, NumTargetPorts, TotalBytes, TotalPackets, StartDateTime, EndDateTime) " +
-                "SELECT SourceIp, NumTargetIps, NumTargetPorts, TotalBytes, TotalPackets, StartDateTime, EndDateTime " +
-                "FROM @InsertTable";
+                "SELECT i.SourceIp, i.NumTargetIps, i.NumTargetPorts, i.TotalBytes, i.TotalPackets, i.StartDateTime, i.EndDateTime " +
+                "FROM @InsertTable i " +
+                "LEFT JOIN dbo.ProbeInformation e on i.SourceIp = e.SourceIp " +
+                "WHERE e.SourceIp IS NULL;";
 
             var insertTableParameter = new SqlParameter("@InsertTable", this.GetProbeInformationDataTable(probes));
             insertTableParameter.TypeName = "ProbeInformationInsert";

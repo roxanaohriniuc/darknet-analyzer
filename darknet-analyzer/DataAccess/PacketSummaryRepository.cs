@@ -11,7 +11,7 @@ namespace darknet_analyzer.DataAccess
     {
         public PacketSummaryRepository(string connectionString) : base(connectionString) { }
 
-        public void Insert(IEnumerable<PacketSummary> packetSummaries)
+        public void Create(IEnumerable<PacketSummary> packetSummaries)
         {
             var insertSql =
                 "INSERT INTO dbo.PacketSummary (ReceivedDateTime, Bytes, Protocol, SourceIp, SourcePort, DestinationIp, DestinationPort, FileId) " +

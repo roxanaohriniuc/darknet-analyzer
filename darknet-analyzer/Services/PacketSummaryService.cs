@@ -34,7 +34,7 @@ namespace darknet_analyzer.Services
                     // insert packet summaries in batches
                     if(packetSummaries.Count >= 50000)
                     {
-                        this.packetSummaryRepository.Insert(packetSummaries);
+                        this.packetSummaryRepository.Create(packetSummaries);
                         packetCount += packetSummaries.Count;
                         packetSummaries.Clear();
                     }
@@ -49,7 +49,7 @@ namespace darknet_analyzer.Services
                 }
             });
 
-            this.packetSummaryRepository.Insert(packetSummaries);
+            this.packetSummaryRepository.Create(packetSummaries);
             packetCount += packetSummaries.Count;
             packetSummaries.Clear();
             Console.Write($"\rPackets: {packetCount}/{packetCount + errors.Count}\tElapsed Time: {(int)(stopwatch.ElapsedMilliseconds / 1000)} (s)");
