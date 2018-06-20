@@ -1,5 +1,7 @@
 ﻿using darknet_analyzer.DataAccess;
+using darknet_analyzer.Models;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -31,11 +33,11 @@ namespace darknet_analyzer.Services
                 if(probes.Any())
                 {
                     this.probeInformationRepository.CreateOrUpdate(probes);
+                    lastSourceIp = probes.Last().SourceIp;
                 }
 
                 totalProbes += probes.Count;
                 lastBatchSize = probes.Count;
-                lastSourceIp = probes.Last().SourceIp;
 
                 Console.Write($"\rProbes: {totalProbes}\tElapsed Time: {(int)(stopwatch.ElapsedMilliseconds / 1000)} (s)");
             }
@@ -43,6 +45,11 @@ namespace darknet_analyzer.Services
 
             stopwatch.Stop();
             Console.WriteLine();
+        }
+
+        public List<ProbeInformation> GetProbes(ScanType scanType, string comparison, int top)
+        {
+            return this.probeInformationRepository.GetProbes(scanType, comparison, top);
         }
     }
 }

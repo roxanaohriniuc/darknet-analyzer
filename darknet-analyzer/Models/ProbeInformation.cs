@@ -27,6 +27,11 @@ namespace darknet_analyzer.Models
             this.SourceIp = string.Empty;
         }
 
+        public string ToDescription()
+        {
+            return $"{this.SourceIp}\t({this.StartDateTime} - {this.EndDateTime})\tRate: {this.Rate:0.0000000} p/s\tScan Type: {this.ScanType}";
+        }
+
         private ScanType DetermineProbeType()
         {
             const int verticalThreshold = 5;

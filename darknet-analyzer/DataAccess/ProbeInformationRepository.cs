@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace darknet_analyzer.DataAccess
 {
@@ -67,5 +68,21 @@ namespace darknet_analyzer.DataAccess
             return dt;
         }
 
+        public List<ProbeInformation> GetProbes(ScanType scanType, string comparison, int top)
+        {
+            var sql = $"SELECT TOP {top} * FROM ProbeInformation WHERE ScanType {comparison} {(byte)scanType}";
+            var dt = this.Query(sql);
+
+            return dt.Select().Select(r => new ProbeInformation
+            {
+                SourceIp = (string)r["SourceIp"],
+                NumTargetIps = (int)r["NumTargetIps"],
+                NumTargetPorts = (int)r["NumTargetPorts"],
+                TotalBytes = (int)r["TotalBytes"],
+                TotalPackets = (int)r["TotalPackets"],
+                StartDateTime = (DateTime)r["StartDateTime"],
+                EndDateTime = (DateTime)r["EndDateTime"]
+            }).ToList();
+        }
     }
 }

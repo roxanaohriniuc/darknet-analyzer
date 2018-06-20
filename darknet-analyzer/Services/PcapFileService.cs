@@ -18,7 +18,7 @@ namespace darknet_analyzer.Services
             this.probeInformationService = new ProbeInformationService(dbConnectionString);
         }
 
-        public void ProcessFileOrDirectory(string path)
+        public void LoadFileOrDirectory(string path)
         {
             // get the file attributes for file or directory
             var attr = File.GetAttributes(path);
@@ -33,10 +33,6 @@ namespace darknet_analyzer.Services
             {
                 this.LoadFile(path);
             }
-
-            Console.WriteLine("Analyzing new source ip addresses.");
-            this.probeInformationService.AnalyzeProbeInformation();
-            this.pcapFileRepository.MarkFilesAsAnalyzed();
         }
 
         private void LoadFile(string filePath)
@@ -56,6 +52,13 @@ namespace darknet_analyzer.Services
 
             Console.WriteLine($"Loading file: {filePath}");
             this.packetSummaryService.LoadPcapFile(file);
+        }
+
+        public void AnalyzeNewFiles()
+        {
+            Console.WriteLine("Analyzing new source ip addresses.");
+            this.probeInformationService.AnalyzeProbeInformation();
+            this.pcapFileRepository.MarkFilesAsAnalyzed();
         }
     }
 }
