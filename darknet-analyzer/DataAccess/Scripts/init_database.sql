@@ -24,7 +24,9 @@ CREATE TYPE dbo.ProbeInformationInsert AS TABLE
     TotalBytes INT,
     TotalPackets INT,
     StartDateTime DATETIME,
-    EndDateTime DATETIME
+    EndDateTime DATETIME,
+    Rate DECIMAL(38, 10),
+    ScanType SMALLINT
 )
 
 IF OBJECT_ID('dbo.PacketSummary', 'U') IS NOT NULL
@@ -53,7 +55,9 @@ CREATE TABLE dbo.ProbeInformation
     TotalBytes INT,
     TotalPackets INT,
     StartDateTime DATETIME,
-    EndDateTime DATETIME
+    EndDateTime DATETIME,    
+    Rate DECIMAL(38, 10),
+    ScanType SMALLINT
 )
 
 IF OBJECT_ID('dbo.PcapFile', 'U') IS NOT NULL
@@ -67,6 +71,7 @@ CREATE TABLE dbo.PcapFile
 )
 
 ALTER TABLE dbo.PacketSummary ADD FOREIGN KEY (FileId) REFERENCES PcapFile (Id);
+CREATE NONCLUSTERED INDEX idx_packetsummary_fileid ON dbo.PacketSummary (FileId);
 CREATE CLUSTERED INDEX idx_packetsummary_sourceip ON dbo.PacketSummary (SourceIp);
 
 GO
@@ -75,7 +80,7 @@ IF OBJECT_ID('GetProbeInformationBatch', 'P') IS NOT NULL
 
 GO
 CREATE PROCEDURE GetProbeInformationBatch 
-    @BatchNum INT,
+    @LastSourceIp VARCHAR(255),
     @BatchSize INT
 AS
 BEGIN
@@ -84,13 +89,13 @@ BEGIN
     SET NOCOUNT ON;
 
     ;WITH ProbePage AS (
-        SELECT DISTINCT PageSourceIp = SourceIp
+        SELECT TOP (@BatchSize) PageSourceIp = SourceIp
         FROM dbo.PacketSummary s
         INNER JOIN dbo.PcapFile f ON s.FileId = f.Id
         WHERE f.Analyzed <> 1
+		AND s.SourceIp > @LastSourceIp
+		GROUP BY SourceIp
         ORDER BY SourceIp
-        OFFSET (@BatchNum * @BatchSize) ROWS 
-        FETCH NEXT @BatchSize ROWS ONLY
     )
     
     SELECT

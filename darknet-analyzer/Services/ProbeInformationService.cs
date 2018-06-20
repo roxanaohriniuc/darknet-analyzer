@@ -20,14 +20,14 @@ namespace darknet_analyzer.Services
         {
             // loop through all SourceIps and generate probe information
             const int batchSize = 1000;
-            var batchNum = 0;
+            var lastSourceIp = string.Empty;
             var lastBatchSize = 0;
 
             var stopwatch = Stopwatch.StartNew();
             var totalProbes = 0;
             do
             {
-                var probes = this.packetSummaryService.GetProbeInformationBatch(batchNum, batchSize);
+                var probes = this.packetSummaryService.GetProbeInformationBatch(lastSourceIp, batchSize);
                 if(probes.Any())
                 {
                     this.probeInformationRepository.CreateOrUpdate(probes);
@@ -35,7 +35,7 @@ namespace darknet_analyzer.Services
 
                 totalProbes += probes.Count;
                 lastBatchSize = probes.Count;
-                batchNum++;
+                lastSourceIp = probes.Last().SourceIp;
 
                 Console.Write($"\rProbes: {totalProbes}\tElapsed Time: {(int)(stopwatch.ElapsedMilliseconds / 1000)} (s)");
             }

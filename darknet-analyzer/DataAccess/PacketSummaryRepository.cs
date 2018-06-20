@@ -55,9 +55,9 @@ namespace darknet_analyzer.DataAccess
             return dt;
         }
 
-        public List<ProbeInformation> GetProbeInformationBatch(int batchNum, int batchSize)
+        public List<ProbeInformation> GetProbeInformationBatch(string lastSourceIp, int batchSize)
         {
-            var dt = this.ExecuteStoredProcedure("GetProbeInformationBatch", new SqlParameter("@BatchNum", batchNum), new SqlParameter("@BatchSize", batchSize));
+            var dt = this.ExecuteStoredProcedure("GetProbeInformationBatch", new SqlParameter("@LastSourceIp", lastSourceIp), new SqlParameter("@BatchSize", batchSize));
 
             return dt.Select().Select(r => new ProbeInformation
             {

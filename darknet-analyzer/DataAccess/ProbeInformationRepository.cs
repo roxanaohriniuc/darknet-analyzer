@@ -17,12 +17,13 @@ namespace darknet_analyzer.DataAccess
                 "UPDATE e SET " +
                 "e.NumTargetIps = u.NumTargetIps, e.NumTargetPorts = u.NumTargetPorts, " +
                 "e.TotalBytes = u.TotalBytes, e.Totalpackets = u.TotalPackets, " +
-                "e.StartDateTime = u.StartDateTime, e.EndDateTime = u.EndDateTime " +
+                "e.StartDateTime = u.StartDateTime, e.EndDateTime = u.EndDateTime," +
+                "e.Rate = u.Rate, e.ScanType = u.ScanType " +
                 "FROM @InsertTable u " +
                 "INNER JOIN dbo.ProbeInformation e ON u.SourceIp = e.SourceIp; " +
                 // Insert new records
-                "INSERT INTO dbo.ProbeInformation (SourceIp, NumTargetIps, NumTargetPorts, TotalBytes, TotalPackets, StartDateTime, EndDateTime) " +
-                "SELECT i.SourceIp, i.NumTargetIps, i.NumTargetPorts, i.TotalBytes, i.TotalPackets, i.StartDateTime, i.EndDateTime " +
+                "INSERT INTO dbo.ProbeInformation (SourceIp, NumTargetIps, NumTargetPorts, TotalBytes, TotalPackets, StartDateTime, EndDateTime, Rate, ScanType) " +
+                "SELECT i.SourceIp, i.NumTargetIps, i.NumTargetPorts, i.TotalBytes, i.TotalPackets, i.StartDateTime, i.EndDateTime, i.Rate, i.ScanType " +
                 "FROM @InsertTable i " +
                 "LEFT JOIN dbo.ProbeInformation e on i.SourceIp = e.SourceIp " +
                 "WHERE e.SourceIp IS NULL;";
@@ -44,6 +45,8 @@ namespace darknet_analyzer.DataAccess
             dt.Columns.Add("TotalPackets", typeof(long));
             dt.Columns.Add("StartDateTime", typeof(DateTime));
             dt.Columns.Add("EndDateTime", typeof(DateTime));
+            dt.Columns.Add("Rate", typeof(decimal));
+            dt.Columns.Add("ScanType", typeof(byte));
 
             // Populate DataTable with data
             foreach (var probeInformation in probes)
@@ -56,6 +59,8 @@ namespace darknet_analyzer.DataAccess
                 row["TotalPackets"] = probeInformation.TotalPackets;
                 row["StartDateTime"] = probeInformation.StartDateTime;
                 row["EndDateTime"] = probeInformation.EndDateTime;
+                row["Rate"] = probeInformation.Rate;
+                row["ScanType"] = (byte)probeInformation.ScanType;
                 dt.Rows.Add(row);
             }
 

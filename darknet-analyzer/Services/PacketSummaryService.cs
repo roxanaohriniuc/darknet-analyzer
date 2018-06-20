@@ -56,9 +56,9 @@ namespace darknet_analyzer.Services
             //errors.ForEach(e => this.userInterface.Error(e.ToString()));
         }
 
-        public List<ProbeInformation> GetProbeInformationBatch(int batchNum, int batchSize)
+        public List<ProbeInformation> GetProbeInformationBatch(string lastSourceIp, int batchSize)
         {
-            return this.packetSummaryRepository.GetProbeInformationBatch(batchNum, batchSize);
+            return this.packetSummaryRepository.GetProbeInformationBatch(lastSourceIp, batchSize);
         }
     }
 }
