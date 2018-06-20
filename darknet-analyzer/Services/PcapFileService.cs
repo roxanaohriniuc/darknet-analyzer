@@ -21,17 +21,17 @@ namespace darknet_analyzer.Services
         public void ProcessFileOrDirectory(string path)
         {
             // get the file attributes for file or directory
-            FileAttributes attr = File.GetAttributes(path);
+            var attr = File.GetAttributes(path);
             if (attr.HasFlag(FileAttributes.Directory))
             {
                 foreach(var filePath in Directory.GetFiles(path, "*.pcap"))
                 {
-                    this.ProcessFile(path);
+                    this.LoadFile(filePath);
                 }
             }
             else
             {
-                this.ProcessFile(path);
+                this.LoadFile(path);
             }
 
             Console.WriteLine("Analyzing new source ip addresses.");
@@ -39,7 +39,7 @@ namespace darknet_analyzer.Services
             this.pcapFileRepository.MarkFilesAsAnalyzed();
         }
 
-        private void ProcessFile(string filePath)
+        private void LoadFile(string filePath)
         {
             var insertResult = this.pcapFileRepository.Create(filePath);
             if (insertResult.AlreadyExists)
@@ -55,7 +55,7 @@ namespace darknet_analyzer.Services
             };
 
             Console.WriteLine($"Loading file: {filePath}");
-            this.packetSummaryService.AnalyzePcapFile(file);
+            this.packetSummaryService.LoadPcapFile(file);
         }
     }
 }
